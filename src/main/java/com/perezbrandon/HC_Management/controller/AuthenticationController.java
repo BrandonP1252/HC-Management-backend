@@ -1,10 +1,12 @@
 package com.perezbrandon.HC_Management.controller;
 
 import com.perezbrandon.HC_Management.config.JwtService;
+import com.perezbrandon.HC_Management.dto.PatientRegReq;
 import com.perezbrandon.HC_Management.dto.UserRegReq;
 import com.perezbrandon.HC_Management.model.Patient;
 import com.perezbrandon.HC_Management.respository.PatientRepository;
 import com.perezbrandon.HC_Management.service.CustomUserDetailsService;
+import com.perezbrandon.HC_Management.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class AuthenticationController {
@@ -32,11 +35,15 @@ public class AuthenticationController {
     @Autowired
     private final PatientRepository patientRepository;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtService jwtService, CustomUserDetailsService userDetailsService, PatientRepository patientRepository) {
+    @Autowired
+    private final PatientService patientService;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtService jwtService, CustomUserDetailsService userDetailsService, PatientRepository patientRepository, PatientService patientService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.patientRepository = patientRepository;
+        this.patientService = patientService;
     }
 
     @PostMapping("/authenticate")
@@ -48,6 +55,24 @@ public class AuthenticationController {
         else {
             throw new UsernameNotFoundException("Username or password does not exist.");
         }
+    }
+
+    @PostMapping("/register")
+    public Patient registerUser(@RequestBody PatientRegReq patientRegReq) {
+        Optional<Patient> patientByUsername = patientRepository.patientByUsername(patientRegReq.getUsername());
+        Optional<Patient> patientByEmail = patientRepository.patientByEmail(patientRegReq.getEmail());
+
+        if (patientByUsername.isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        if (patientByEmail.isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        Patient patient = patientService.convertToEntity(patientRegReq);
+        patientService.savePatientUser(patient);
+        return patient;
     }
 
 
