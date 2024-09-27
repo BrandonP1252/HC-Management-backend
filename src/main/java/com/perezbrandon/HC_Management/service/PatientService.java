@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Service
 public class PatientService {
@@ -26,6 +27,23 @@ public class PatientService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public Patient registerPatient(PatientRegReq patient) {
+        Optional<Patient> patientByUsername = patientRepository.patientByUsername(patient.getUsername());
+        Optional<Patient> patientByEmail = patientRepository.patientByEmail(patient.getEmail());
+
+        if (patientByUsername.isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        if (patientByEmail.isPresent()) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        Patient newPatient = convertToEntity(patient);
+        patientRepository.save(newPatient);
+        return newPatient;
+
+    }
 
     public Patient convertToEntity(PatientRegReq patient) {
         Patient newPatient = new Patient();

@@ -1,11 +1,17 @@
 package com.perezbrandon.HC_Management.controller;
 
 import com.perezbrandon.HC_Management.config.JwtService;
+import com.perezbrandon.HC_Management.dto.AdminRegReq;
+import com.perezbrandon.HC_Management.dto.DoctorRegReq;
 import com.perezbrandon.HC_Management.dto.PatientRegReq;
 import com.perezbrandon.HC_Management.dto.UserRegReq;
+import com.perezbrandon.HC_Management.model.Admin;
+import com.perezbrandon.HC_Management.model.Doctor;
 import com.perezbrandon.HC_Management.model.Patient;
 import com.perezbrandon.HC_Management.respository.PatientRepository;
+import com.perezbrandon.HC_Management.service.AdminService;
 import com.perezbrandon.HC_Management.service.CustomUserDetailsService;
+import com.perezbrandon.HC_Management.service.DoctorService;
 import com.perezbrandon.HC_Management.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,18 +39,24 @@ public class AuthenticationController {
     private final CustomUserDetailsService userDetailsService;
 
     @Autowired
-    private final PatientRepository patientRepository;
-
-    @Autowired
     private final PatientService patientService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, JwtService jwtService, CustomUserDetailsService userDetailsService, PatientRepository patientRepository, PatientService patientService) {
+    @Autowired
+    private final AdminService adminService;
+
+    @Autowired
+    private final DoctorService doctorService;
+
+    public AuthenticationController(AuthenticationManager authenticationManager, JwtService jwtService, CustomUserDetailsService userDetailsService, PatientService patientService, AdminService adminService, DoctorService doctorService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.patientRepository = patientRepository;
         this.patientService = patientService;
+        this.adminService = adminService;
+        this.doctorService = doctorService;
     }
+
+    // USER LOGIN
 
     @PostMapping("/authenticate")
     public String authenticateUser(@RequestBody UserRegReq userRegReq) {
@@ -57,28 +69,21 @@ public class AuthenticationController {
         }
     }
 
+    // ALL USER REGISTRATIONS
+
     @PostMapping("/register")
     public Patient registerUser(@RequestBody PatientRegReq patientRegReq) {
-        Optional<Patient> patientByUsername = patientRepository.patientByUsername(patientRegReq.getUsername());
-        Optional<Patient> patientByEmail = patientRepository.patientByEmail(patientRegReq.getEmail());
-
-        if (patientByUsername.isPresent()) {
-            throw new RuntimeException("Username already exists");
-        }
-
-        if (patientByEmail.isPresent()) {
-            throw new RuntimeException("Email already exists");
-        }
-
-        Patient patient = patientService.convertToEntity(patientRegReq);
-        patientService.savePatientUser(patient);
-        return patient;
+        return patientService.registerPatient(patientRegReq);
     }
 
-
-
-    @GetMapping("/user/users")
-    public List<Patient> getPatients() {
-        return patientRepository.findAll();
+    @PostMapping("/admin/register/admin")
+    public Admin registerAdmin(@RequestBody AdminRegReq adminRegReq) {
+        return adminService.registerAdmin(adminRegReq);
     }
+
+    @PostMapping("/admin/register/doctor")
+    public Doctor registerDoctor(@RequestBody DoctorRegReq doctorRegReq) {
+        return doctorService.registerDoctor(doctorRegReq);
+    }
+
 }
