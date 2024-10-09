@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,24 +28,27 @@ public class PatientService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // registers patient
     public Patient registerPatient(PatientRegReq patient) {
         Optional<Patient> patientByUsername = patientRepository.patientByUsername(patient.getUsername());
         Optional<Patient> patientByEmail = patientRepository.patientByEmail(patient.getEmail());
 
+        // check if username exists
         if (patientByUsername.isPresent()) {
             throw new RuntimeException("Username already exists");
         }
-
+        // check if email exists
         if (patientByEmail.isPresent()) {
             throw new RuntimeException("Email already exists");
         }
-
+        // convert PatientRegReq to Patient
         Patient newPatient = convertToEntity(patient);
         patientRepository.save(newPatient);
         return newPatient;
 
     }
 
+    // DTO conversion
     public Patient convertToEntity(PatientRegReq patient) {
         Patient newPatient = new Patient();
         newPatient.setUsername(patient.getUsername());
@@ -60,9 +64,12 @@ public class PatientService {
         return newPatient;
     }
 
-    public void savePatientUser(Patient patient) {
-        patientRepository.save(patient);
+    public List<Patient> getPatients() {
+        return patientRepository.findAll();
     }
 
+    public void deletePatient(Integer id) {
+        patientRepository.deleteById(id);
+    }
 
 }

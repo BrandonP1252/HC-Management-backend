@@ -25,24 +25,29 @@ public class AdminService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // registers admin
     public Admin registerAdmin(AdminRegReq admin) {
         Optional<Admin> adminByUsername = adminRepository.adminByUsername(admin.getUsername());
         Optional<Admin> adminByEmail = adminRepository.adminByEmail(admin.getEmail());
 
+        // checks if username exists
         if (adminByUsername.isPresent()) {
             throw new RuntimeException("Username already exists");
         }
 
+        // checks if email exists
         if (adminByEmail.isPresent()) {
             throw new RuntimeException("Email already exists");
         }
 
+        // converts AdminRegReq to Admin
         Admin newAdmin = convertToEntity(admin);
         adminRepository.save(newAdmin);
         return newAdmin;
 
     }
 
+    // DTO conversion
     public Admin convertToEntity(AdminRegReq admin) {
         Admin newAdmin = new Admin();
         newAdmin.setEmail(admin.getEmail());

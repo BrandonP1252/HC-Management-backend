@@ -22,7 +22,7 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    private static final long VALIDITY = TimeUnit.MINUTES.toMillis(30);
+    private static final long ACCESS_VALIDITY = TimeUnit.MINUTES.toMillis(30);
 
     public String generateToken(UserDetails userDetails) {
         Map<String, String> claim = new HashMap<>();
@@ -31,7 +31,7 @@ public class JwtService {
                 .claims(claim)
                 .subject(userDetails.getUsername())
                 .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plusMillis(VALIDITY)))
+                .expiration(Date.from(Instant.now().plusMillis(ACCESS_VALIDITY)))
                 .signWith(generateKey())
                 .compact();
     }

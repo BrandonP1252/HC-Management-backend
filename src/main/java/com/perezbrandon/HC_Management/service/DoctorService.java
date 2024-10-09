@@ -23,24 +23,29 @@ public class DoctorService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // registers doctor
     public Doctor registerDoctor(DoctorRegReq doctor) {
         Optional<Doctor> doctorByUsername = doctorRepository.doctorByUsername(doctor.getUsername());
         Optional<Doctor> doctorByEmail = doctorRepository.doctorByEmail(doctor.getEmail());
 
+        // checks if username exists
         if (doctorByUsername.isPresent()) {
             throw new RuntimeException("Username already exists");
         }
 
+        // checks if email exist
         if (doctorByEmail.isPresent()) {
             throw new RuntimeException("Email already exists");
         }
 
+        // converts DoctorRegReq to Doctor
         Doctor newDoctor = convertToEntity(doctor);
         doctorRepository.save(newDoctor);
         return newDoctor;
 
     }
 
+    // DTO conversion
     public Doctor convertToEntity(DoctorRegReq doctor) {
         Doctor newDoctor = new Doctor();
         newDoctor.setUsername(doctor.getUsername());

@@ -36,6 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
+        // Checks if username is a doctor
         Optional<Doctor> optional_doctor = doctorRepository.doctorByUsername(username);
         if (optional_doctor.isPresent()) {
             Doctor doctor = optional_doctor.get();
@@ -46,6 +47,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .build();
         }
 
+        // Checks if username is a patient
         Optional<Patient> optional_patient = patientRepository.patientByUsername(username);
         if (optional_patient.isPresent()) {
             Patient patient = optional_patient.get();
@@ -56,6 +58,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .build();
         }
 
+        // Checks if username is an admin
         Optional<Admin> optional_admin = adminRepository.adminByUsername(username);
         if (optional_admin.isPresent()) {
             Admin admin = optional_admin.get();

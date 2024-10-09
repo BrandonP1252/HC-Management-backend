@@ -11,16 +11,6 @@ public class PatientRegReq {
     private String gender;
     private String address;
 
-    public PatientRegReq(String username, String password, String name, String email, String phone, String date_of_birth, String gender, String address) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.date_of_birth = date_of_birth;
-        this.gender = gender;
-        this.address = address;
-    }
 
     public String getUsername() {
         return username;

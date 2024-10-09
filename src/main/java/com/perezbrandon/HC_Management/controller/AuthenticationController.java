@@ -8,7 +8,6 @@ import com.perezbrandon.HC_Management.dto.UserRegReq;
 import com.perezbrandon.HC_Management.model.Admin;
 import com.perezbrandon.HC_Management.model.Doctor;
 import com.perezbrandon.HC_Management.model.Patient;
-import com.perezbrandon.HC_Management.respository.PatientRepository;
 import com.perezbrandon.HC_Management.service.AdminService;
 import com.perezbrandon.HC_Management.service.CustomUserDetailsService;
 import com.perezbrandon.HC_Management.service.DoctorService;
@@ -18,13 +17,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class AuthenticationController {
@@ -46,6 +42,7 @@ public class AuthenticationController {
 
     @Autowired
     private final DoctorService doctorService;
+
 
     public AuthenticationController(AuthenticationManager authenticationManager, JwtService jwtService, CustomUserDetailsService userDetailsService, PatientService patientService, AdminService adminService, DoctorService doctorService) {
         this.authenticationManager = authenticationManager;
