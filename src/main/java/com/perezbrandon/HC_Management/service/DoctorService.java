@@ -2,11 +2,13 @@ package com.perezbrandon.HC_Management.service;
 
 import com.perezbrandon.HC_Management.dto.DoctorRegReq;
 import com.perezbrandon.HC_Management.model.Doctor;
+import com.perezbrandon.HC_Management.model.Role;
 import com.perezbrandon.HC_Management.respository.DoctorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -54,7 +56,18 @@ public class DoctorService {
         newDoctor.setEmail(doctor.getEmail());
         newDoctor.setSpecialty(doctor.getSpecialty());
         newDoctor.setPhone(doctor.getPhone());
+        newDoctor.setRole(Role.DOCTOR);
         return newDoctor;
+    }
+
+    // Get Doctors
+    public List<Doctor> getDoctors() {
+        return doctorRepository.findAll();
+    }
+
+    // Delete doctor
+    public void deleteDoctor(Integer id) {
+        doctorRepository.deleteById(id);
     }
 
 

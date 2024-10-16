@@ -8,15 +8,6 @@ public class DoctorRegReq {
     private String email;
     private String phone;
 
-    public DoctorRegReq(String username, String password, String name, String specialty, String email, String phone) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.specialty = specialty;
-        this.email = email;
-        this.phone = phone;
-    }
-
     public String getUsername() {
         return username;
     }
