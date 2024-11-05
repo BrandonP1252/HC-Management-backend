@@ -3,6 +3,7 @@ package com.perezbrandon.HC_Management.model;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity
@@ -32,12 +33,15 @@ public class Appointment {
     private Timestamp created_at;
     private Timestamp updated_at;
 
+    @Column(nullable = false)
+    private Time appointment_time;
+
 
     public Appointment() {
 
     }
 
-    public Appointment(Integer patient_id, Integer doctor_id, Date appointment_date, String reason, Status status, Timestamp created_at, Timestamp updated_at) {
+    public Appointment(Integer patient_id, Integer doctor_id, Date appointment_date, String reason, Status status, Timestamp created_at, Timestamp updated_at, Time appointment_time) {
         this.patient_id = patient_id;
         this.doctor_id = doctor_id;
         this.appointment_date = appointment_date;
@@ -45,6 +49,7 @@ public class Appointment {
         this.status = status;
         this.created_at = created_at;
         this.updated_at = updated_at;
+        this.appointment_time = appointment_time;
     }
 
     public Integer getId() {
@@ -109,6 +114,14 @@ public class Appointment {
 
     public void setUpdated_at(Timestamp updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public Time getAppointment_time() {
+        return appointment_time;
+    }
+
+    public void setAppointment_time(Time appointment_time) {
+        this.appointment_time = appointment_time;
     }
 
     @Override

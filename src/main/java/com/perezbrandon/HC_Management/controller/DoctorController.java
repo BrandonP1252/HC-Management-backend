@@ -17,7 +17,7 @@ public class DoctorController {
         this.doctorService = doctorService;
     }
 
-    @GetMapping("/admin/doctor-list")
+    @GetMapping("/user/doctor-list")
     public List<Doctor> getDoctors() {
         return doctorService.getDoctors();
     }
@@ -26,5 +26,11 @@ public class DoctorController {
     public void deleteDoctor(@PathVariable("id") Integer id) {
         doctorService.deleteDoctor(id);
     }
+
+    @GetMapping("/user/get-doctor/{id}")
+    public Doctor getDoctorById(@PathVariable("id") Integer id) {
+        return doctorService.getDoctorById(id);
+    }
+
 
 }

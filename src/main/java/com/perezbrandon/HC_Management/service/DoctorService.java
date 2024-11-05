@@ -70,5 +70,15 @@ public class DoctorService {
         doctorRepository.deleteById(id);
     }
 
+    // Get Doctor by ID
+    public Doctor getDoctorById(Integer id) {
+        Optional<Doctor> doctor = doctorRepository.findById(id);
+        if (doctor.isPresent()) {
+            return doctor.get();
+        } else{
+            throw new RuntimeException("Doctor does not exist");
+        }
+    }
+
 
 }

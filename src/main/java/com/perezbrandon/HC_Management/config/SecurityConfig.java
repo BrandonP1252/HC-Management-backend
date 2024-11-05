@@ -47,10 +47,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(registry->{
                     // Endpoint permission
-           registry.requestMatchers("/register", "/authenticate").permitAll();
+           registry.requestMatchers("/register", "/authenticate", "/test").permitAll();
            registry.requestMatchers("/admin/**").hasRole(Role.ADMIN.name());
-           registry.requestMatchers("/user/**").hasRole(Role.PATIENT.name());
-           registry.requestMatchers("/doctor/**").hasRole(Role.DOCTOR.name());
+           registry.requestMatchers("/user/**").hasAnyRole(Role.PATIENT.name(), Role.DOCTOR.name(), Role.ADMIN.name());
+           registry.requestMatchers("/doctor/**").hasAnyRole(Role.DOCTOR.name(), Role.ADMIN.name());
            registry.anyRequest().authenticated();
         })
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
